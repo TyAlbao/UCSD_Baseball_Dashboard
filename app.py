@@ -25,4 +25,5 @@ count_bucket = st.sidebar.radio("Count State", ["2k", "<2k"])
 player_df = df[df["Batter"] == player]
 
 # Call your plotting function
-visuals.plot_zone_dashboard(player_df, zone_scaling, count_bucket)
+fig = visuals.plot_zone_dashboard(player_df, zone_scaling, count_bucket)
+st.pyplot(fig)

@@ -86,4 +86,5 @@ def plot_zone_dashboard(player_df, zone_scaling_dict, hitter_count_toggle="<2k")
         fontsize=10
     )
 
-    st.pyplot(fig)
+    # st.pyplot(fig)
+    return fig
