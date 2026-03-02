@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.colors as mcolors
+import streamlit as st
 
 def plot_zone_dashboard(player_df, zone_scaling_dict, hitter_count_toggle="<2k"):
 
@@ -85,4 +86,4 @@ def plot_zone_dashboard(player_df, zone_scaling_dict, hitter_count_toggle="<2k")
         fontsize=10
     )
 
-    plt.show()
+    st.pyplot(fig)
