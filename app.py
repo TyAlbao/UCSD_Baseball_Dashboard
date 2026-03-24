@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import pickle
 import visuals
-from import_data import import_data
+from bigquery_utils import import_data
 
 st.set_page_config(layout="wide")
 

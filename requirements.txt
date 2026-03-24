@@ -4,4 +4,5 @@ matplotlib
 numpy
 google-cloud-bigquery
 google-cloud-bigquery-storage
+google-auth
 pyarrow
