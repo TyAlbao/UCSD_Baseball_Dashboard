@@ -2,3 +2,6 @@ streamlit
 pandas
 matplotlib
 numpy
+google-cloud-bigquery
+google-cloud-bigquery-storage
+pyarrow
