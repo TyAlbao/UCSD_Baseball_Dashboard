@@ -22,4 +22,5 @@ def import_data(dataset, table_name):
     FROM `master-trackman-project.{dataset}.{table_name}`
     """
 
-    return client.query(query).to_dataframe()
+    query_job = client.query(query)
+    return query_job.to_dataframe(create_bqstorage_client=False)
