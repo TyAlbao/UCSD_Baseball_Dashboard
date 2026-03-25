@@ -51,12 +51,12 @@ def plot_zone_dashboard(player_df, zone_scaling_dict, hitter_count_toggle="<2k",
         x1, x2, y1, y2 = bounds[zone]
         raw_value = zone_values.get(zone, 0)
 
+        cmap = plt.cm.RdBu_r
+
         if cfg["diverging"]:
-            cmap = plt.cm.RdBu_r
             zone_max_abs = zone_scaling.get((zone, hitter_count_toggle), 1)
             norm = mcolors.Normalize(vmin=-zone_max_abs, vmax=zone_max_abs)
         else:
-            cmap = plt.cm.YlGn
             # scale 0 → max across all zones for this count state
             all_vals = [zone_values.get(z, 0) for z in bounds]
             v_max = max(all_vals) if max(all_vals) > 0 else 1
