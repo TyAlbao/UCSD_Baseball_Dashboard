@@ -107,7 +107,7 @@ def plot_zone_dashboard(player_df, zone_percentiles, hitter_count_toggle="<2k", 
 
     if not is_qualified:
         ax.text(
-            0, -0.05,
+            0, -0.5,
             "* Below minimum PA threshold — percentile colors are relative to qualified batters",
             ha="center", va="bottom", fontsize=9, style="italic", color="gray"
         )
