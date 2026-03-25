@@ -23,7 +23,7 @@ qualified_batters = df.groupby('Batter')['count'].sum()
 qualified_batters = qualified_batters[qualified_batters >= mean_abs].index
 df_qualified = df[df['Batter'].isin(qualified_batters)]
 
-players = sorted(df_qualified["Batter"].unique())
+players = sorted(df["Batter"].unique())
 player = st.sidebar.selectbox("Select Player", players)
 count_bucket = st.sidebar.radio("Count State", ["2k", "<2k"])
 metric = st.sidebar.radio("Metric", list(visuals.METRIC_CONFIG.keys()))
