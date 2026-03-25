@@ -25,6 +25,8 @@ df_qualified = df[df['Batter'].isin(qualified_batters)]
 
 players = sorted(df["Batter"].unique())
 player = st.sidebar.selectbox("Select Player", players)
+is_qualified = player in qualified_batters
+
 count_bucket = st.sidebar.radio("Count State", ["2k", "<2k"])
 metric = st.sidebar.radio("Metric", list(visuals.METRIC_CONFIG.keys()))
 
@@ -40,7 +42,7 @@ zone_percentiles = (
 
 player_df = df[df["Batter"] == player]
 
-fig = visuals.plot_zone_dashboard(player_df, zone_percentiles, count_bucket, metric)
+fig = visuals.plot_zone_dashboard(player_df, zone_percentiles, count_bucket, metric, is_qualified)
 left_col, _ = st.columns([2, 1])
 with left_col:
     st.pyplot(fig)

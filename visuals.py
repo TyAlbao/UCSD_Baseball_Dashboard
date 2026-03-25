@@ -34,7 +34,7 @@ def _percentile_rank(sorted_vals, value):
     return idx / (n - 1)  # 0.0 = min, 1.0 = max
 
 
-def plot_zone_dashboard(player_df, zone_percentiles, hitter_count_toggle="<2k", metric="Run Value"):
+def plot_zone_dashboard(player_df, zone_percentiles, hitter_count_toggle="<2k", metric="Run Value", is_qualified=True):
 
     cfg = METRIC_CONFIG[metric]
     col = cfg["col"]
@@ -101,7 +101,17 @@ def plot_zone_dashboard(player_df, zone_percentiles, hitter_count_toggle="<2k", 
     ax.set_ylim(0, 5)
     ax.set_xlabel("PlateLocSide (ft)")
     ax.set_ylabel("PlateLocHeight (ft)")
-    ax.set_title(f"{cfg['label']} ({hitter_count_toggle})", weight="bold")
+
+    qualifier_note = "" if is_qualified else " *"
+    ax.set_title(f"{cfg['label']} ({hitter_count_toggle}){qualifier_note}", weight="bold")
+
+    if not is_qualified:
+        ax.text(
+            0, 5.05,
+            "* Below minimum PA threshold — percentile colors are relative to qualified batters",
+            ha="center", va="bottom", fontsize=9, style="italic", color="gray"
+        )
+
     ax.set_aspect("equal", adjustable="box")
     ax.legend(loc="upper right", framealpha=1)
 
