@@ -37,4 +37,6 @@ metric = st.sidebar.radio(
 player_df = df[df["Batter"] == player]
 
 fig = visuals.plot_zone_dashboard(player_df, zone_scaling, count_bucket, metric)
-st.pyplot(fig)
+col, _ = st.columns([1, 1])  # left half of page
+with col:
+    st.pyplot(fig)
