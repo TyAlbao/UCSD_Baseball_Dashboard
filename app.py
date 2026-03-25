@@ -29,10 +29,20 @@ player = st.sidebar.selectbox("Select Player", players)
 
 count_bucket = st.sidebar.radio("Count State", ["2k", "<2k"])
 
-metric = st.sidebar.radio(
-    "Metric",
-    list(visuals.METRIC_CONFIG.keys()),   # ["Run Value", "Swing %", "Count"]
-)
+st.write("visuals file:", visuals.__file__)
+st.write("has METRIC_CONFIG:", hasattr(visuals, "METRIC_CONFIG"))
+st.write("dir visuals:", dir(visuals))
+
+metric_options = ["Run Value", "Swing %", "Count"]
+if hasattr(visuals, "METRIC_CONFIG"):
+    metric_options = list(visuals.METRIC_CONFIG.keys())
+
+metric = st.sidebar.radio("Metric", metric_options)
+
+# metric = st.sidebar.radio(
+#     "Metric",
+#     list(visuals.METRIC_CONFIG.keys()),   # ["Run Value", "Swing %", "Count"]
+# )
 
 player_df = df[df["Batter"] == player]
 
