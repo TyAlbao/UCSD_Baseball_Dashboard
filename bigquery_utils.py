@@ -20,7 +20,6 @@ def import_data(dataset, table_name):
     query = f"""
     SELECT *
     FROM `master-trackman-project.{dataset}.{table_name}`
-    ORDER BY GameID ASC, Inning ASC, Top_Bottom DESC, PAofInning ASC, PitchofPA ASC
     """
 
     return client.query(query).to_dataframe()
