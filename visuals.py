@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.colors as mcolors
-import numpy as np
 from bisect import bisect_left
 
 METRIC_CONFIG = {
@@ -29,11 +28,8 @@ METRIC_CONFIG = {
 def _percentile_rank(sorted_vals, value):
     """Return 0–1 percentile rank of value within a sorted list."""
     n = len(sorted_vals)
-    if n == 0:
+    if n <= 1:
         return 0.5
-    if n == 1:
-        return 0.5
-    # Number of values strictly below, plus 0.5 for ties → midpoint method
     idx = bisect_left(sorted_vals, value)
     return idx / (n - 1)  # 0.0 = min, 1.0 = max
 
@@ -55,7 +51,6 @@ def plot_zone_dashboard(player_df, zone_percentiles, hitter_count_toggle="<2k", 
 
     fig, ax = plt.subplots(figsize=(10, 8))
     cmap = plt.cm.RdBu_r
-    # Percentile is already 0–1, map directly onto colormap
     norm = mcolors.Normalize(vmin=0, vmax=1)
 
     for zone in ["Waste", "Chase", "Shadow", "Heart"]:
@@ -64,16 +59,10 @@ def plot_zone_dashboard(player_df, zone_percentiles, hitter_count_toggle="<2k", 
 
         if raw_value is None:
             color = "lightgrey"
-        elif cfg["diverging"]:
-            sorted_vals = zone_percentiles.get((zone, hitter_count_toggle), [])
-            pct = _percentile_rank(sorted_vals, raw_value)
-            color = cmap(norm(pct))
         else:
-            # For non-diverging metrics, scale within zone across count state
             sorted_vals = zone_percentiles.get((zone, hitter_count_toggle), [])
             pct = _percentile_rank(sorted_vals, raw_value)
-            # Use a sequential colormap for non-diverging metrics
-            color = plt.cm.Blues(norm(pct))
+            color = cmap(norm(pct))  # RdBu_r: 0=blue, 0.5=white, 1=red for all metrics
 
         rect = patches.Rectangle(
             (x1, y1),
@@ -96,7 +85,6 @@ def plot_zone_dashboard(player_df, zone_percentiles, hitter_count_toggle="<2k", 
             weight="bold",
         )
 
-    # ---- Rulebook strike zone ----
     rulebook = patches.Rectangle(
         (-0.833, 1.5),
         1.666,
@@ -117,11 +105,7 @@ def plot_zone_dashboard(player_df, zone_percentiles, hitter_count_toggle="<2k", 
     ax.set_aspect("equal", adjustable="box")
     ax.legend(loc="upper right", framealpha=1)
 
-    scale_note = (
-        "Color = percentile rank within zone\n(vs. all players, same count)"
-        if cfg["diverging"]
-        else "Color = percentile rank within zone\n(vs. all players, same count)"
-    )
-    ax.text(2, 0.15, scale_note, ha="right", va="bottom", fontsize=10)
+    ax.text(2, 0.15, "Color = percentile rank within zone\n(qualified batters, same count)",
+            ha="right", va="bottom", fontsize=10)
 
     return fig
