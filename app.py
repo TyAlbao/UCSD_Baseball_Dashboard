@@ -38,7 +38,7 @@ zone_percentiles = (
     .to_dict()
 )
 
-player_df = df_qualified[df_qualified["Batter"] == player]
+player_df = df[df["Batter"] == player]
 
 fig = visuals.plot_zone_dashboard(player_df, zone_percentiles, count_bucket, metric)
 left_col, _ = st.columns([2, 1])
