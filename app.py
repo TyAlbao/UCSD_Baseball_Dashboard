@@ -3,7 +3,7 @@ import pandas as pd
 import visuals
 from bigquery_utils import import_data
 
-st.set_page_config(layout="wide")
+# st.set_page_config(layout="wide")
 
 st.title("UCSD Hitting Decision Dashboard")
 

@@ -45,7 +45,7 @@ def plot_zone_dashboard(player_df, zone_scaling_dict, hitter_count_toggle="<2k",
         "Heart":  (-0.558, 0.558, 1.833, 3.167),
     }
 
-    fig, ax = plt.subplots(figsize=(6,5))
+    fig, ax = plt.subplots(figsize=(10, 8))
 
     for zone in ["Waste", "Chase", "Shadow", "Heart"]:
         x1, x2, y1, y2 = bounds[zone]
