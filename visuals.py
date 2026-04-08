@@ -4,10 +4,16 @@ import matplotlib.colors as mcolors
 from bisect import bisect_left
 
 METRIC_CONFIG = {
-    "Run Value": {
-        "col": "weighted_re_sum",
+    "Total Run Value": {
+        "col": "weighted_relative_re_sum",
         "fmt": "{:+.2f}",
-        "label": "Runs Added",
+        "label": "Total Runs Added",
+        "diverging": True,
+    },
+    "Average Run Value": {
+        "col": "weighted_relative_re_mean",
+        "fmt": "{:+.2f}",
+        "label": "Average Runs Added",
         "diverging": True,
     },
     "Swing %": {
@@ -26,20 +32,27 @@ METRIC_CONFIG = {
 
 
 def _percentile_rank(sorted_vals, value):
-    """Return 0–1 percentile rank of value within a sorted list."""
+    """Return 0–1 percentile rank of value within a sorted list.
+    0.0 = minimum (darkest blue), 1.0 = maximum (darkest red).
+    """
     n = len(sorted_vals)
     if n <= 1:
         return 0.5
     idx = bisect_left(sorted_vals, value)
-    return idx / (n - 1)  # 0.0 = min, 1.0 = max
+    return idx / (n - 1)
 
 
-def plot_zone_dashboard(player_df, zone_percentiles, hitter_count_toggle="<2k", metric="Run Value", is_qualified=True):
+def plot_zone_dashboard(player_df, zone_percentiles, hitter_count_toggle="<2k", metric="Total Run Value", is_qualified=True):
 
     cfg = METRIC_CONFIG[metric]
     col = cfg["col"]
 
-    df = player_df[player_df["hitter_count"] == hitter_count_toggle].copy()
+    # filter to the selected count state; Overall uses the full player_df
+    if hitter_count_toggle == "Overall":
+        df = player_df.copy()
+    else:
+        df = player_df[player_df["hitter_count"] == hitter_count_toggle].copy()
+
     zone_values = dict(zip(df["PlateZone"], df[col]))
 
     bounds = {
@@ -60,9 +73,16 @@ def plot_zone_dashboard(player_df, zone_percentiles, hitter_count_toggle="<2k", 
         if raw_value is None:
             color = "lightgrey"
         else:
-            sorted_vals = zone_percentiles.get((zone, hitter_count_toggle), [])
+            # key is just PlateZone for Overall, (PlateZone, hitter_count) otherwise
+            if hitter_count_toggle == "Overall":
+                lookup_key = zone
+            else:
+                lookup_key = (zone, hitter_count_toggle)
+
+            sorted_vals = zone_percentiles.get(lookup_key, [])
             pct = _percentile_rank(sorted_vals, raw_value)
-            color = cmap(norm(pct))  # RdBu_r: 0=blue, 0.5=white, 1=red for all metrics
+            # 0.0 → darkest blue (RdBu_r left), 1.0 → darkest red (RdBu_r right)
+            color = cmap(norm(pct))
 
         rect = patches.Rectangle(
             (x1, y1),
