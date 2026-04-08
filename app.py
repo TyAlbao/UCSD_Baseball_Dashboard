@@ -40,19 +40,17 @@ col = cfg["col"]
 if count_bucket == "Overall":
     df = df_overall
     df_qualified = df_overall[df_overall["Batter"].isin(qualified_batters)]
-    # percentile lookup keyed by PlateZone only
     zone_percentiles = (
         df_qualified.groupby("PlateZone")[col]
-        .apply(sorted)
+        .apply(lambda x: sorted(x.tolist()))
         .to_dict()
     )
 else:
     df = df_hitter_count
     df_qualified = df_hitter_count[df_hitter_count["Batter"].isin(qualified_batters)]
-    # percentile lookup keyed by (PlateZone, hitter_count)
     zone_percentiles = (
         df_qualified.groupby(["PlateZone", "hitter_count"])[col]
-        .apply(sorted)
+        .apply(lambda x: sorted(x.tolist()))
         .to_dict()
     )
 
